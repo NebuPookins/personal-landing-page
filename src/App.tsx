@@ -13,13 +13,6 @@ interface SlideData {
 
 const content: SlideData[] = [
   {
-    id: "intro",
-    type: "intro",
-    bg: "red",
-    text: "Hi, I'm Nebu Pookins",
-    extra: '<div class="arrow">↓</div>'
-  },
-  {
     id: "referrer",
     type: "referrer",
     bg: "green",
@@ -59,10 +52,9 @@ import MenuSlide from './MenuSlide';
 const App: React.FC = () => {
   return (
     <div id="slides">
+      <IntroSlide />;
       {content.map(item => {
         switch (item.type) {
-          case "intro":
-            return <IntroSlide key={item.id} id={item.id} bg={item.bg} title={item.text} body={item.extra} />;
           case "menu":
             return <MenuSlide key={item.id} id={item.id} bg={item.bg} title={item.text} items={item.links?.map(link => ({ ...link, href: `#${link.slide}` }))} />;
           case "referrer":

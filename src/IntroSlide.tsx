@@ -1,21 +1,16 @@
 import React from 'react';
 
 interface IntroSlideProps {
-  id: string;
-  bg: string;
-  title?: string; // Title is from item.text, which is optional
-  body?: string;  // Body is from item.extra, which is optional (and can be HTML string)
 }
 
-const IntroSlide: React.FC<IntroSlideProps> = ({ id, bg, title, body }) => {
+const IntroSlide: React.FC<IntroSlideProps> = ({}) => {
   return (
     <section
-      id={id}
       className="slide"
-      style={{ background: bg }}
+      style={{ background: "red" }}
     >
-      {title && <h1>{title}</h1>}
-      {body && <div dangerouslySetInnerHTML={{ __html: body }} />}
+      <h1>Hi, I'm Nebu Pookins</h1>
+      <div className="arrow">↓</div>
     </section>
   );
 };
