@@ -53,10 +53,10 @@ const App: React.FC = () => {
   const referrerInfo = testReferrer || getReferrerInfo(document.referrer);
 
   const menuItems = [
-    { label: "Streaming", slide: "streaming", href: "#streaming" },
-    { label: "Programming", slide: "programming", href: "#programming" },
-    { label: "Non-Fiction Writing", slide: "nonfiction", href: "#nonfiction" },
-    { label: "Fiction Writing", slide: "fiction", href: "#fiction" },
+    { label: "Streaming", href: "#streaming" },
+    { label: "Programming", href: "#programming" },
+    { label: "Non-Fiction Writing", href: "#nonfiction" },
+    { label: "Fiction Writing", href: "#fiction" },
   ];
 
   return (
@@ -67,8 +67,6 @@ const App: React.FC = () => {
       )}
       <MenuSlide
         id="menu"
-        bg="blue"
-        title="Did you know I'm into all of these things?"
         items={menuItems}
       />
       <StreamingSlide id="streaming" />
