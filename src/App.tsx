@@ -2,13 +2,55 @@ import React from 'react';
 import IntroSlide from './IntroSlide';
 import MenuSlide from './MenuSlide';
 import ReferrerSlide from './ReferrerSlide';
+import type { ReferrerBucket } from './ReferrerSlide';
 import StreamingSlide from './StreamingSlide';
 import ProgrammingSlide from './ProgrammingSlide';
 import NonfictionSlide from './NonfictionSlide';
 import FictionSlide from './FictionSlide';
 
+interface ReferrerInfo {
+  domainName: string;
+  bucket: ReferrerBucket;
+}
+
+const domainToBucketMap: {[key:string] : ReferrerBucket} = {
+  "github.com": "programming",
+  "twitch.tv": "streaming",
+  "substack.com": "non-fiction",
+  "medium.com": "non-fiction",
+  "dev.to": "programming",
+  "youtube.com": "streaming",
+  "linkedin.com": "programming",
+}
+
+const getReferrerInfo = (referrer: string): ReferrerInfo | null => {
+  if (!referrer || referrer.includes(location.hostname)) {
+    return null;
+  }
+
+  try {
+    const url = new URL(referrer);
+    const domain = url.hostname;
+    let bucket: ReferrerBucket | null = null;
+    for (const [key, value] of Object.entries(domainToBucketMap)) {
+      if (domain.includes(key)) {
+        bucket = value
+        break;
+      }
+    }
+    if (bucket) {
+      return { domainName: domain, bucket };
+    }
+  } catch (e) {
+    console.error("Error parsing referrer URL:", e);
+  }
+  return null;
+};
+
 const App: React.FC = () => {
-  const shouldShowReferrerSlide = !!(document.referrer && !document.referrer.includes(location.hostname));
+  let testReferrer: { domainName: string, bucket: ReferrerBucket} | null = null;
+  //testReferrer = { domainName: "example.com", bucket: "streaming" };
+  const referrerInfo = testReferrer || getReferrerInfo(document.referrer);
 
   const menuItems = [
     { label: "Streaming", slide: "streaming", href: "#streaming" },
@@ -20,7 +62,9 @@ const App: React.FC = () => {
   return (
     <div id="slides">
       <IntroSlide />
-      {shouldShowReferrerSlide && <ReferrerSlide />}
+      {referrerInfo && (
+        <ReferrerSlide domainName={referrerInfo.domainName} bucket={referrerInfo.bucket} />
+      )}
       <MenuSlide
         id="menu"
         bg="blue"
