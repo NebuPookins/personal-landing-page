@@ -1,4 +1,9 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
+import { gsap } from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { ScrollSmoother } from 'gsap/ScrollSmoother';
+
+gsap.registerPlugin(ScrollTrigger, ScrollSmoother);
 
 interface SlideData {
   id: string;
@@ -48,26 +53,65 @@ const content: SlideData[] = [
 import Slide from './Slide';
 
 const App: React.FC = () => {
+  const smoother = useRef<ScrollSmoother | null>(null);
+  const main = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (main.current) {
+      smoother.current = ScrollSmoother.create({
+        smooth: 1, // seconds it takes to "catch up" to native scroll position
+        effects: true, // look for data-speed and data-lag attributes on elements
+        smoothTouch: 0.1, // much shorter smoothing time on touch devices (default is NO smoothing on touch)
+      });
+
+      // Pin each slide and snap to it
+      document.querySelectorAll<HTMLElement>(".slide").forEach((slide, index, slides) => {
+        ScrollTrigger.create({
+          trigger: slide,
+          pin: true,
+          pinSpacing: false, // No extra space added when pinning
+          start: "top top",
+          end: () => `+=${slide.offsetHeight}`, // End when the slide is fully scrolled
+          snap: {
+            snapTo: 1 / (slides.length -1), // Snap to the start of each slide
+            duration: { min: 0.2, max: 0.6 }, // Snap animation duration
+            delay: 0, // No delay before snapping
+            ease: "power1.inOut"
+          }
+        });
+      });
+    }
+    return () => {
+      if (smoother.current) {
+        smoother.current.kill();
+      }
+      ScrollTrigger.getAll().forEach(st => st.kill());
+    };
+  }, []);
+
   return (
-    <div id="slides">
-      {content.map(item => {
-        if (item.id === "referrer" && item.condition) {
-          if (!item.condition()) return null;
-          const refText = item.textFromReferrer!(document.referrer);
-          // Use a unique key for the referrer slide, as item.id might not be unique if multiple referrers are possible
-          return <Slide key={`${item.id}-referrer`} id={item.id} bg={item.bg} htmlContent={refText} />;
-        }
+    <div id="smooth-wrapper" ref={main}>
+      <div id="smooth-content">
+        <div id="slides">
+          {content.map(item => {
+            if (item.id === "referrer" && item.condition) {
+              if (!item.condition()) return null;
+              const refText = item.textFromReferrer!(document.referrer);
+              return <Slide key={`${item.id}-referrer`} id={item.id} bg={item.bg} htmlContent={refText} />;
+            }
 
-        let htmlContent = item.text || "";
-        if (item.links) {
-          htmlContent += '<ul>' + item.links.map(link => `<li><a href="#${link.slide}">${link.label}</a></li>`).join('') + '</ul>';
-        }
-        if (item.extra) {
-          htmlContent += item.extra;
-        }
+            let htmlContent = item.text || "";
+            if (item.links) {
+              htmlContent += '<ul>' + item.links.map(link => `<li><a href="#${link.slide}" onClick={(e) => { e.preventDefault(); smoother.current?.scrollTo(\`#${link.slide}\`, true);}} >${link.label}</a></li>`).join('') + '</ul>';
+            }
+            if (item.extra) {
+              htmlContent += item.extra;
+            }
 
-        return <Slide key={item.id} id={item.id} bg={item.bg} htmlContent={htmlContent} />;
-      })}
+            return <Slide key={item.id} id={item.id} bg={item.bg} htmlContent={htmlContent} />;
+          })}
+        </div>
+      </div>
     </div>
   );
 };

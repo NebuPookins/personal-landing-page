@@ -1,12 +1,20 @@
 html, body {
   margin: 0;
   padding: 0;
-  scroll-snap-type: y mandatory;
-  overflow-y: scroll;
-  height: 100vh;
+  /* Removed scroll-snap-type and overflow-y */
+  height: 100%; /* Changed to 100% for GSAP ScrollSmoother */
 }
+
+#smooth-wrapper {
+  overflow: visible; /* Or as needed by ScrollSmoother */
+}
+
+#smooth-content {
+  /* Styles for the content area that ScrollSmoother will manage */
+}
+
 .slide {
-  scroll-snap-align: start;
+  /* Removed scroll-snap-align */
   height: 100vh;
   display: flex;
   justify-content: center;
