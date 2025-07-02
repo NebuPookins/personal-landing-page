@@ -12,18 +12,7 @@ interface SlideData {
 }
 
 const content: SlideData[] = [
-  {
-    id: "referrer",
-    type: "referrer",
-    bg: "green",
-    condition: () => !!(document.referrer && !document.referrer.includes(location.hostname)),
-    textFromReferrer: (ref: string) => {
-      if (ref.includes("twitch.tv")) return "You came from Twitch, so you probably know me from Streaming.";
-      if (ref.includes("github.com")) return "You came from GitHub, so you're probably a programmer like me.";
-      if (ref.includes("substack.com")) return "You came from Substack — welcome, fellow reader.";
-      return `You came from ${new URL(ref).hostname}`;
-    },
-  },
+  // The "referrer" entry is removed from here as it's handled directly above the map.
   {
     id: "menu",
     type: "menu",
@@ -46,21 +35,26 @@ const content: SlideData[] = [
 import Slide from './Slide';
 import IntroSlide from './IntroSlide';
 import MenuSlide from './MenuSlide';
+import ReferrerSlide from './ReferrerSlide'; // Import the new component
 
 // interface SlideData and const content are already defined above and should not be duplicated.
 
 const App: React.FC = () => {
+  const shouldShowReferrerSlide = !!(document.referrer && !document.referrer.includes(location.hostname));
+
   return (
     <div id="slides">
-      <IntroSlide />;
+      <IntroSlide />
+      {shouldShowReferrerSlide && <ReferrerSlide />}
       {content.map(item => {
+        // Filter out any potential "referrer" type items from content array if they were missed,
+        // though it should have been removed.
+        if (item.type === "referrer") return null;
+
         switch (item.type) {
           case "menu":
             return <MenuSlide key={item.id} id={item.id} bg={item.bg} title={item.text} items={item.links?.map(link => ({ ...link, href: `#${link.slide}` }))} />;
-          case "referrer":
-            if (item.condition && !item.condition()) return null;
-            const refText = item.textFromReferrer ? item.textFromReferrer(document.referrer) : "Came from another page";
-            return <Slide key={`${item.id}-referrer`} id={item.id} bg={item.bg} htmlContent={refText} />;
+          // case "referrer": // This case is now removed
           case "generic":
           default:
             let htmlContent = item.text || "";
