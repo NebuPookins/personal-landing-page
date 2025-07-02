@@ -2,6 +2,7 @@ import React from 'react';
 
 interface SlideData {
   id: string;
+  type: 'intro' | 'menu' | 'referrer' | 'generic';
   bg: string;
   text?: string;
   extra?: string;
@@ -13,12 +14,14 @@ interface SlideData {
 const content: SlideData[] = [
   {
     id: "intro",
+    type: "intro",
     bg: "red",
     text: "Hi, I'm Nebu Pookins",
     extra: '<div class="arrow">↓</div>'
   },
   {
     id: "referrer",
+    type: "referrer",
     bg: "green",
     condition: () => !!(document.referrer && !document.referrer.includes(location.hostname)),
     textFromReferrer: (ref: string) => {
@@ -30,6 +33,7 @@ const content: SlideData[] = [
   },
   {
     id: "menu",
+    type: "menu",
     bg: "blue",
     text: "Did you know I'm into all of these things?",
     links: [
@@ -39,34 +43,40 @@ const content: SlideData[] = [
       { label: "Fiction Writing", slide: "fiction" },
     ]
   },
-  { id: "streaming", bg: "purple", text: '<a href="https://twitch.tv/NebuPookins">Check out my Twitch</a>' },
-  { id: "programming", bg: "darkslategray", text: '<a href="https://github.com/NebuPookins">Browse my GitHub</a>' },
-  { id: "nonfiction", bg: "orange", text: '<a href="https://nebu.substack.com">Read my essays on Substack</a>' },
-  { id: "fiction", bg: "brown", text: 'Fiction writing slide coming soon!' }
+  { id: "streaming", type: "generic", bg: "purple", text: '<a href="https://twitch.tv/NebuPookins">Check out my Twitch</a>' },
+  { id: "programming", type: "generic", bg: "darkslategray", text: '<a href="https://github.com/NebuPookins">Browse my GitHub</a>' },
+  { id: "nonfiction", type: "generic", bg: "orange", text: '<a href="https://nebu.substack.com">Read my essays on Substack</a>' },
+  { id: "fiction", type: "generic", bg: "brown", text: 'Fiction writing slide coming soon!' }
 ];
 
+// import React from 'react'; // React is already imported at the top
 import Slide from './Slide';
+import IntroSlide from './IntroSlide';
+import MenuSlide from './MenuSlide';
+
+// interface SlideData and const content are already defined above and should not be duplicated.
 
 const App: React.FC = () => {
   return (
     <div id="slides">
       {content.map(item => {
-        if (item.id === "referrer" && item.condition) {
-          if (!item.condition()) return null;
-          const refText = item.textFromReferrer!(document.referrer);
-          // Use a unique key for the referrer slide, as item.id might not be unique if multiple referrers are possible
-          return <Slide key={`${item.id}-referrer`} id={item.id} bg={item.bg} htmlContent={refText} />;
+        switch (item.type) {
+          case "intro":
+            return <IntroSlide key={item.id} id={item.id} bg={item.bg} title={item.text} body={item.extra} />;
+          case "menu":
+            return <MenuSlide key={item.id} id={item.id} bg={item.bg} title={item.text} items={item.links?.map(link => ({ ...link, href: `#${link.slide}` }))} />;
+          case "referrer":
+            if (item.condition && !item.condition()) return null;
+            const refText = item.textFromReferrer ? item.textFromReferrer(document.referrer) : "Came from another page";
+            return <Slide key={`${item.id}-referrer`} id={item.id} bg={item.bg} htmlContent={refText} />;
+          case "generic":
+          default:
+            let htmlContent = item.text || "";
+            if (item.extra) { // Generic slides can still use 'extra' if defined
+              htmlContent += item.extra;
+            }
+            return <Slide key={item.id} id={item.id} bg={item.bg} htmlContent={htmlContent} />;
         }
-
-        let htmlContent = item.text || "";
-        if (item.links) {
-          htmlContent += '<ul>' + item.links.map(link => `<li><a href="#${link.slide}">${link.label}</a></li>`).join('') + '</ul>';
-        }
-        if (item.extra) {
-          htmlContent += item.extra;
-        }
-
-        return <Slide key={item.id} id={item.id} bg={item.bg} htmlContent={htmlContent} />;
       })}
     </div>
   );
