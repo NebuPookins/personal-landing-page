@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Nebu Pookins</title>
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      scroll-snap-type: y mandatory;
+      overflow-y: scroll;
+      height: 100vh;
+    }
+    .slide {
+      scroll-snap-align: start;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-family: sans-serif;
+      font-size: 2em;
+      color: white;
+      flex-direction: column;
+    }
+    .arrow {
+      margin-top: 1em;
+      font-size: 1.5em;
+      animation: bounce 2s infinite;
+    }
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(10px); }
+    }
+    a { color: white; text-decoration: underline; }
+  </style>
+</head>
+<body>
+  <div id="slides"></div>
+
+  <script>
+    const content = [
+      {
+        id: "intro",
+        bg: "red",
+        text: "Hi, I'm Nebu Pookins",
+        extra: '<div class="arrow">↓</div>'
+      },
+      {
+        id: "referrer",
+        bg: "green",
+        condition: () => document.referrer && !document.referrer.includes(location.hostname),
+        textFromReferrer: (ref) => {
+          if (ref.includes("twitch.tv")) return "You came from Twitch, so you probably know me from Streaming.";
+          if (ref.includes("github.com")) return "You came from GitHub, so you're probably a programmer like me.";
+          if (ref.includes("substack.com")) return "You came from Substack — welcome, fellow reader.";
+          return `You came from ${new URL(ref).hostname}`;
+        },
+      },
+      {
+        id: "menu",
+        bg: "blue",
+        text: "Did you know I'm into all of these things?",
+        links: [
+          { label: "Streaming", slide: "streaming" },
+          { label: "Programming", slide: "programming" },
+          { label: "Non-Fiction Writing", slide: "nonfiction" },
+          { label: "Fiction Writing", slide: "fiction" },
+        ]
+      },
+      { id: "streaming", bg: "purple", text: '<a href="https://twitch.tv/NebuPookins">Check out my Twitch</a>' },
+      { id: "programming", bg: "darkslategray", text: '<a href="https://github.com/NebuPookins">Browse my GitHub</a>' },
+      { id: "nonfiction", bg: "orange", text: '<a href="https://nebu.substack.com">Read my essays on Substack</a>' },
+      { id: "fiction", bg: "brown", text: 'Fiction writing slide coming soon!' }
+    ];
+
+    const container = document.getElementById("slides");
+
+    content.forEach(item => {
+      if (item.id === "referrer" && item.condition) {
+        if (!item.condition()) return;
+        const refText = item.textFromReferrer(document.referrer);
+        container.innerHTML += `<section class="slide" style="background:${item.bg}">${refText}</section>`;
+        return;
+      }
+
+      let inner = item.text || "";
+      if (item.links) {
+        inner += '<ul>' + item.links.map(link => `<li><a href="#${link.slide}">${link.label}</a></li>`).join('') + '</ul>';
+      }
+      if (item.extra) {
+        inner += item.extra;
+      }
+
+      container.innerHTML += `<section class="slide" id="${item.id}" style="background:${item.bg}">${inner}</section>`;
+    });
+  </script>
+</body>
+</html>
