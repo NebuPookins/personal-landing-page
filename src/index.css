@@ -1,0 +1,28 @@
+html, body {
+  margin: 0;
+  padding: 0;
+  scroll-snap-type: y mandatory;
+  overflow-y: scroll;
+  height: 100vh;
+}
+.slide {
+  scroll-snap-align: start;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: sans-serif;
+  font-size: 2em;
+  color: white;
+  flex-direction: column;
+}
+.arrow {
+  margin-top: 1em;
+  font-size: 1.5em;
+  animation: bounce 2s infinite;
+}
+@keyframes bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(10px); }
+}
+a { color: white; text-decoration: underline; }
