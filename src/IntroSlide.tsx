@@ -17,17 +17,19 @@ const IntroSlide: React.FC<IntroSlideProps> = ({}) => {
       style={{ background: "red", position: 'relative', overflow: 'hidden' }}
     >
       <h1>Hi, I'm Nebu Pookins</h1>
+      <h2>(And the cat's name is Marley)</h2>
       <div className="arrow">↓</div>
       <img
-        src="placeholder.svg"
-        alt="Placeholder"
+        src="nebu-and-marley.png"
+        alt="An Asian guy holding up a cat"
         className={`animated-image ${animate ? 'slide-in' : ''}`}
         style={{
           position: 'absolute',
-          bottom: '20px',
-          right: '20px',
-          width: '100px', // Adjust as needed
-          height: '100px', // Adjust as needed
+          bottom: '0px',
+          right: '0px',
+          width: '50vw',
+          height: '50vh', 
+          objectFit: 'cover',
         }}
       />
     </section>
