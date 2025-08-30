@@ -5,4 +5,8 @@ import react from '@vitejs/plugin-react'
 export default defineConfig({
   base: '/personal-landing-page/',
   plugins: [react()],
+  preview: {
+    port: 28550,
+    strictPort: true
+  }
 })
