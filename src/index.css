@@ -32,6 +32,38 @@ a { color: white; text-decoration: underline; }
   text-align: center;
 }
 
+.posts-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1.5rem;
+  max-width: 800px;
+  margin: 2rem auto;
+  padding: 0 1rem;
+}
+
+.post-thumbnail {
+  position: relative;
+  display: block;
+  text-decoration: none;
+  color: white;
+  border-radius: 8px;
+  overflow: hidden;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  background: rgba(0, 0, 0, 0.1);
+}
+
+.post-thumbnail:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+}
+
+.post-thumbnail img {
+  width: 100%;
+  aspect-ratio: 4/5;
+  object-fit: cover;
+  display: block;
+}
+
 .animated-image {
   transform: translateX(150%); /* Start off-screen to the right */
   transition: transform 1s ease-out;
