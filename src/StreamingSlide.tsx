@@ -19,7 +19,7 @@ const StreamingSlide: React.FC<StreamingSlideProps> = ({ id }) => {
       className="slide"
       style={{ background: "purple" }}
     >
-      <h1>I Stream on <a href="https://twitch.tv/NebuPookins" target="_blank" rel="noopener noreferrer">Twitch</a></h1>
+      <h1>I Stream on <a href="https://twitch.tv/NebuPookins" target="_blank" rel="noopener">Twitch</a></h1>
       <br />
       <h2>Here's my channel trailer</h2>
       <iframe
@@ -44,7 +44,7 @@ const StreamingSlide: React.FC<StreamingSlideProps> = ({ id }) => {
           <a 
             href="https://www.tiktok.com/@nebupookins" 
             target="_blank" 
-            rel="noopener noreferrer"
+            rel="noopener"
             style={{
               display: 'block',
               transition: 'transform 0.2s ease-in-out'
@@ -69,7 +69,7 @@ const StreamingSlide: React.FC<StreamingSlideProps> = ({ id }) => {
           <a 
             href="https://www.instagram.com/nebupookins" 
             target="_blank" 
-            rel="noopener noreferrer"
+            rel="noopener"
             style={{
               display: 'block',
               transition: 'transform 0.2s ease-in-out'

@@ -16,7 +16,7 @@ const FictionSlide: React.FC<FictionSlideProps> = ({ id }) => {
       <a 
         href="https://amzn.to/45GmIp3" 
         target="_blank" 
-        rel="noopener noreferrer"
+        rel="noopener"
         className="amazon-link"
       >
         <img 

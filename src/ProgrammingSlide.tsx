@@ -12,7 +12,7 @@ const ProgrammingSlide: React.FC<ProgrammingSlideProps> = ({ id }) => {
       style={{ background: "darkslategray" }}
     >
       <h2>Programming</h2>
-      <p><a href="https://github.com/NebuPookins" target="_blank" rel="noopener noreferrer">Browse my GitHub</a></p>
+      <p><a href="https://github.com/NebuPookins" target="_blank" rel="noopener">Browse my GitHub</a></p>
       <div className="arrow">↓</div>
     </section>
   );

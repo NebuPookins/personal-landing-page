@@ -12,7 +12,7 @@ const NonfictionSlide: React.FC<NonfictionSlideProps> = ({ id }) => {
       style={{ background: "orange" }}
     >
       <h2>Non-Fiction Writing</h2>
-      <p><a href="https://nebu.substack.com" target="_blank" rel="noopener noreferrer">Read my essays on Substack</a></p>
+      <p><a href="https://nebu.substack.com" target="_blank" rel="noopener">Read my essays on Substack</a></p>
       <div className="arrow">↓</div>
     </section>
   );
