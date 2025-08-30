@@ -29,8 +29,69 @@ const StreamingSlide: React.FC<StreamingSlideProps> = ({ id }) => {
         title="YouTube video player"
         frameBorder="0"
         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-        referrerPolicy="strict-origin-when-cross-origin" allowFullScreen></iframe>
+        referrerPolicy="strict-origin-when-cross-origin" 
+        allowFullScreen
+      />
         <br />
+        <h2>And I post my clips on</h2>
+        <div style={{
+          display: 'flex',
+          gap: '40px',
+          justifyContent: 'center',
+          alignItems: 'center',
+          marginTop: '20px'
+        }}>
+          <a 
+            href="https://www.tiktok.com/@nebupookins" 
+            target="_blank" 
+            rel="noopener noreferrer"
+            style={{
+              display: 'block',
+              transition: 'transform 0.2s ease-in-out'
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.transform = 'scale(1.1)';
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.transform = 'scale(1)';
+            }}
+          >
+            <img 
+              src="icon-tiktok-bg.png" 
+              alt="TikTok" 
+              style={{
+                width: '80px',
+                height: '80px',
+                borderRadius: '12px'
+              }}
+            />
+          </a>
+          <a 
+            href="https://www.instagram.com/nebupookins" 
+            target="_blank" 
+            rel="noopener noreferrer"
+            style={{
+              display: 'block',
+              transition: 'transform 0.2s ease-in-out'
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.transform = 'scale(1.1)';
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.transform = 'scale(1)';
+            }}
+          >
+            <img 
+              src="icon-instagram-bg.png" 
+              alt="Instagram" 
+              style={{
+                width: '80px',
+                height: '80px',
+                borderRadius: '12px'
+              }}
+            />
+          </a>
+        </div>
     </section>
   );
 };
