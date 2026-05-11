@@ -12,14 +12,41 @@
 
 		<!-- Theme used for syntax highlighted code -->
 		<link rel="stylesheet" href="plugin/highlight/monokai.css">
+		<style>
+			#first-slide-title {
+				transform: translateY(-80px);
+				opacity: 0;
+				transition: transform 0.8s ease-out, opacity 0.8s ease-out;
+			}
+			#first-slide-title.visible {
+				transform: translateY(0);
+				opacity: 1;
+			}
+			#first-slide-subtitle {
+				transform: translateX(200px);
+				opacity: 0;
+				transition: transform 0.8s ease-out, opacity 0.8s ease-out;
+			}
+			#first-slide-subtitle.visible {
+				transform: translateX(0);
+				opacity: 1;
+			}
+			#first-slide-small {
+				opacity: 0;
+				transition: opacity 0.8s ease-out;
+			}
+			#first-slide-small.visible {
+				opacity: 1;
+			}
+		</style>
 	</head>
 	<body>
 		<div class="reveal">
 			<div class="slides">
-				<section data-background-color="black" data-background-image="assets/splash.jpeg" data-background-size="cover" data-background-position="bottom" data-background-repeat="no-repeat" data-background-opacity="0.5">
-					<h3 class="r-fit-text" style="text-shadow: 4px 4px 8px rgba(0, 0, 0, 0.5);">Nebu Pookins</h2>
-					<h3 class="r-fit-text" style="text-shadow: 4px 4px 8px rgba(0, 0, 0, 0.5);">Press Space To Start</h2>
-					<small>(Or use the controls in the bottom right corner)</small>
+				<section id="first-slide" data-background-color="black" data-background-image="assets/splash.jpeg" data-background-size="cover" data-background-position="bottom" data-background-repeat="no-repeat">
+					<h3 id="first-slide-title" class="r-fit-text" style="text-shadow: 4px 4px 8px rgba(0, 0, 0, 0.5);">Nebu Pookins</h2>
+					<h3 id="first-slide-subtitle" class="r-fit-text" style="text-shadow: 4px 4px 8px rgba(0, 0, 0, 0.5);">Press Space To Start</h2>
+					<small id="first-slide-small">(Or use the controls in the bottom right corner)</small>
 				</section>
 				<section>
 					<p>Hi.</p>
@@ -149,13 +176,81 @@
 
 		<script src="dist/reveal.js"></script>
 		<script>
-			// More info about initialization & config:
-			// - https://revealjs.com/initialization/
-			// - https://revealjs.com/config/
 			Reveal.initialize({
 				hash: true,
 				pause: false,
 				mouseWheel: true,
+			}).then(() => {
+				const firstSlide = document.getElementById('first-slide');
+				if (!firstSlide) return;
+
+				let animTimers = [];
+				let animPlayed = false;
+
+				function clearAnimTimers() {
+					animTimers.forEach(t => clearTimeout(t));
+					animTimers = [];
+				}
+
+				function showFirstSlideFinal() {
+					clearAnimTimers();
+					const bgContent = firstSlide.slideBackgroundContentElement;
+					if (bgContent) {
+						bgContent.style.transition = 'none';
+						bgContent.style.opacity = '0.5';
+					}
+					['first-slide-title', 'first-slide-subtitle', 'first-slide-small'].forEach(id => {
+						const el = document.getElementById(id);
+						if (el) {
+							el.style.transition = 'none';
+							el.classList.add('visible');
+						}
+					});
+				}
+
+				function startFirstSlideAnimation() {
+					if (animPlayed) {
+						showFirstSlideFinal();
+						return;
+					}
+
+					const title = document.getElementById('first-slide-title');
+					const subtitle = document.getElementById('first-slide-subtitle');
+					const small = document.getElementById('first-slide-small');
+					const bgContent = firstSlide.slideBackgroundContentElement;
+
+					animTimers.push(setTimeout(() => {
+						if (bgContent) {
+							bgContent.style.transition = 'opacity 0.8s ease';
+							bgContent.style.opacity = '0.5';
+						}
+						if (title) title.classList.add('visible');
+
+						animTimers.push(setTimeout(() => {
+							if (subtitle) subtitle.classList.add('visible');
+
+							animTimers.push(setTimeout(() => {
+								if (small) small.classList.add('visible');
+								animTimers = [];
+								animPlayed = true;
+							}, 1000));
+						}, 1000));
+					}, 1200));
+				}
+
+				function onSlideChanged(event) {
+					if (event.currentSlide && event.currentSlide.id === 'first-slide') {
+						showFirstSlideFinal();
+					} else if (event.previousSlide && event.previousSlide.id === 'first-slide') {
+						clearAnimTimers();
+					}
+				}
+
+				Reveal.addEventListener('slidechanged', onSlideChanged);
+
+				if (firstSlide.classList.contains('present')) {
+					startFirstSlideAnimation();
+				}
 			});
 		</script>
 	</body>
